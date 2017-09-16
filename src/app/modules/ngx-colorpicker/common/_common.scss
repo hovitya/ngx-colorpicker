@@ -1,0 +1,28 @@
+@mixin element() {
+  border-radius: 2px;
+}
+
+@mixin ngx-color-box() {
+  //box-shadow:         inset 1px 1px 1px 0px rgba(50, 50, 50, 0.2);
+  @include element();
+}
+
+@mixin un-selectable() {
+  user-select: none;
+  cursor: default;
+}
+
+@mixin list-item($itemNumber, $padding) {
+  position: relative;
+  width: calc((100%*(1/#{$itemNumber})) - #{$padding});
+  height: 0;
+  padding-bottom: calc(floor(100%*(1/#{$itemNumber})) - #{$padding});
+  display:inline-block;
+  margin-top: $padding;
+  margin-left: $padding;
+}
+
+@mixin list-container($padding) {
+  margin-left: -1*$padding;
+  margin-top: -1*$padding;
+}

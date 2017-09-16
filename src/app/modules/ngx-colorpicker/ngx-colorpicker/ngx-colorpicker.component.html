@@ -1,0 +1,85 @@
+<div class="ngx-colorpicker-wrapper">
+  <!-- Fix header -->
+  <div class="ngx-colorpicker-block ngx-colorpicker-header">
+    <div class="ngx-selected-color" [ngxColorDisplay]="color" ></div>
+    <button class="ngx-fav-button" ng-class="{active: favouriteSelected}" ng-click="toggleFavourite(state.color)">&hearts;</button>
+    <button class="ngx-colorpicker-close" ng-show="onDemandMode" ng-click="close()">&#10005; close</button>
+  </div>
+
+  <!-- Carousel for color picker pages -->
+  <ul data-rn-carousel data-rn-carousel-indicator>
+    <!-- Solid colors tab -->
+    <li>
+      <div class="ngx-colorpicker-block">
+        <div class="ngx-colorPicker-label">Last used</div>
+        <div class="color-list ngx-last-used">
+          <div class="color-item" data-ng-repeat="color in history| limitTo : 8" [ngxColorDisplay]="color" ng-click="setActive(color)"></div>
+        </div>
+      </div>
+      <div class="ngx-colorpicker-block">
+        <div class="ngx-colorPicker-label">Solid colors</div>
+        <div class="color-list">
+          <div class="color-item" data-ng-repeat="color in solidColors| limitTo : 56" [ngxColorDisplay]="color" ng-click="setActive(color)"></div>
+        </div>
+      </div>
+    </li>
+    <!-- Advanced tab -->
+    <li>
+      <div class="ngx-colorpicker-block">
+        <ngx-color-shades ng-model="state.color"></ngx-color-shades>
+      </div>
+      <div class="ngx-colorpicker-block fix-overflow">
+        <input type="text"
+               ng-model="state.color"
+               spellcheck="false"
+               class="ngx-hex"
+               maxlength="7"
+               ng-model-options="{ debounce: 1000 }">
+        <input type="text"
+               ng-model="state.components.blue"
+               ng-model-options="{ debounce: 1000 }"
+               spellcheck="false"
+               maxlength="3"
+               class="ngx-rgb ngx-b"
+               ng-mouseenter="bHover = true;"
+               ng-mouseleave="bHover = false;"
+               ng-focus="bActive = true;"
+               ng-blur="bActive = false;">
+        <div class="ngx-rgb-label" ng-class="{active: bHover || bActive}">B</div>
+        <input type="text"
+               ng-model="state.components.green"
+               maxlength="3"
+               spellcheck="false"
+               class="ngx-rgb ngx-g"
+               ng-mouseenter="gHover = true;"
+               ng-mouseleave="gHover = false;"
+               ng-focus="gActive = true;"
+               ng-blur="gActive = false;"
+               ng-model-options="{ debounce: : 1000 }">
+        <div class="ngx-rgb-label" ng-class="{active: gHover || gActive}">G</div>
+        <input type="text"
+               ng-model="state.components.red"
+               maxlength="3"
+               spellcheck="false"
+               class="ngx-rgb ngx-r"
+               ng-mouseenter="rHover = true;"
+               ng-mouseleave="rHover = false;"
+               ng-focus="rActive = true;"
+               ng-blur="rActive = false;"
+               ng-model-options="{ debounce: 1000 }">
+        <div class="ngx-rgb-label" ng-class="{active: rHover || rActive}">R</div>
+
+      </div>
+
+    </li>
+    <!-- Favourites tab -->
+    <li>
+      <div class="ngx-colorpicker-block">
+        <div class="ngx-colorPicker-label">Favourites</div>
+        <div class="color-list">
+          <div class="color-item" data-ng-repeat="color in favourites" [ngxColorDisplay]="color" ng-click="setActive(color)"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
