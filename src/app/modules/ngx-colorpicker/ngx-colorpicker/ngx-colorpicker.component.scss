@@ -1,0 +1,205 @@
+@import "../common/common";
+@import "../common/variables";
+
+.color-list {
+  @include list-container($listPadding);
+  .color-item {
+    @include list-item($listNumberOfElements, $listPadding);
+    @include ngx-color-box();
+  }
+}
+
+
+
+.ngx-colorpicker-wrapper {
+  ul{
+    font-size: 0;
+    li{
+      font-size: 12px;
+    }
+  }
+  ul.pages{
+    list-style: none;
+    padding-left: 0;
+  }
+  display: inline-block;
+  width: $desktopWidth;
+  background-color: $panelBackground;
+  color: $textColor;
+  font-family: $font;
+  padding: 5px;
+  .ngx-colorpicker-block {
+    margin-bottom: 10px;
+    &.fix-overflow {
+      padding-right: 2px;
+    }
+  }
+  button {
+    border-radius: 0px;
+    border: 2px solid $fadedColor;
+    color: $fadedColor;
+    background: none;
+    outline: none;
+    &:hover {
+      color: $activeColor;
+      border-color: $activeColor;
+    }
+  }
+
+  .ngx-rgb-label {
+    float: right;
+    font-size: 12px;
+    color: $fadedColor;
+    margin-left: 4px;
+    padding-left: 5px;
+
+    line-height: 24px;
+    border: 1px solid $fadedColor;
+    border-right: none;
+    @include un-selectable();
+    &.active {
+      color: $activeColor;
+      border-color: $activeColor;
+    }
+  }
+
+  input[type='text'] {
+    line-height: 14px;
+    font-size: 12px;
+    border-radius: 0px;
+    border: 1px solid $fadedColor;
+    color: $fadedColor;
+    font-family: $font;
+    background: none;
+    margin: 0 0 0 0;
+    padding: 5px 5px 5px 5px;
+    outline: none;
+    &:hover,&:focus {
+      color: $activeColor;
+      border-color: $activeColor;
+    }
+    &.ngx-hex {
+      width: 60px;
+    }
+
+    &.ngx-rgb {
+      width: 25px;
+      float: right;
+      border-left: none;
+    }
+
+
+
+  }
+
+  .ngx-colorPicker-label {
+    font-weight: $labelWeight;
+    text-transform: uppercase;
+    font-size: $labelSize;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    @include un-selectable();
+  }
+
+  .ngx-selected-color {
+    width: 33px;
+    height: 22px;
+    float: left;
+    margin-right: 5px;
+    @include element();
+  }
+
+  .ngx-fav-button {
+    margin: 0 0 0 0;
+    float: left;
+    &.active {
+      background-color: $fadedColor;
+      color: $panelBackground;
+      &:hover {
+        background-color: $activeColor;
+        border-color: $activeColor;
+      }
+    }
+  }
+
+  .ngx-colorpicker-header {
+    height: 22px;
+  }
+
+  .ngx-last-used {
+    min-height: 26px;
+  }
+
+
+  .ngx-colorpicker-close {
+    float: right;
+    border: none;
+  }
+}
+
+
+
+.rn-carousel-indicator {
+  background: none;
+  span {
+    color: $fadedColor;
+    &:last-child::before {
+      content: "\2665";
+    }
+  }
+
+}
+
+
+.ngx-color-popup-wrapper {
+  z-index: $popUpZIndex;
+  width: $desktopWidth + 2 * $panelPadding;
+  position: absolute;
+
+  .left-side-arrow {
+    float: left;
+  }
+  .right-side-arrow {
+    float: right;
+  }
+
+  .arrow-clear {
+    clear: both;
+  }
+
+  .arrow-up {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+
+    border-bottom: 5px solid $panelBackground;
+    &.left-side-arrow {
+      margin-left: $panelPadding;
+    }
+    &.right-side-arrow {
+      margin-right: $panelPadding;
+    }
+  }
+
+  .arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid $panelBackground;
+    z-index: $popUpZIndex + 2;
+  }
+
+  .ngx-colorpicker-wrapper {
+    z-index: $popUpZIndex + 1;
+  }
+
+  .ngx-popover-content {
+    background-color: $panelBackground;
+  }
+}
+
+.ngx-color-input {
+  cursor: pointer;
+}

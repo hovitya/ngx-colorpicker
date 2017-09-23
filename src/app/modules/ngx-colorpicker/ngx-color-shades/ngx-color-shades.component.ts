@@ -1,25 +1,56 @@
 ///<reference path="../../../../../node_modules/@angular/core/src/metadata/lifecycle_hooks.d.ts"/>
 import {
-  AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild,
+  AfterViewChecked, AfterViewInit, Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild,
   ViewContainerRef
 } from '@angular/core';
 import { Color, ColorEvent } from '../common/color';
 import { NgxPaletteService } from '../services/ngx-palette.service';
-import * as elementResizeDetectorMaker from 'element-resize-detector';
+import { ColorFormat, GenerateColorString } from '../common/color-format';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 const Parameters = {
   BSCanvasSize: 100,
   MaxHue: 360,
   Opaque: 255,
-  DarkLightnessValues: [51, 43, 34, 24]
+  DarkLightnessValues: [49, 43, 34, 24]
 };
 
 @Component({
   selector: 'ngx-color-shades',
   templateUrl: './ngx-color-shades.component.html',
-  styleUrls: ['./ngx-color-shades.component.scss']
+  styleUrls: ['./ngx-color-shades.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => NgxColorShadesComponent),
+      multi: true
+    }
+  ]
 })
-export class NgxColorShadesComponent implements OnInit, OnDestroy, AfterViewInit {
+export class NgxColorShadesComponent implements AfterViewInit, ControlValueAccessor {
+  @ViewChild('hueCanvas') hueCanvas: ElementRef;
+  @ViewChild('chromeCanvas') chromeCanvas: ElementRef;
+  @ViewChild('imageCanvas') imageCanvas: ElementRef;
+  @ViewChild('versionCanvas') versionCanvas: ElementRef;
+
+  private _colorFormat: ColorFormat = ColorFormat.HEX;
+  private isDisabled = false;
+  private lastRenderedHue: string;
+  private tempCanvas: HTMLCanvasElement;
+  private internalColor: Color;
+
+  private propagateChange = (_: any) => { };
+  private onTouched = () => {};
+
+  @Input()
+  set colorFormat(value: ColorFormat) {
+    this._colorFormat = value;
+  }
+
+  get colorFormat(): ColorFormat {
+    return this._colorFormat;
+  }
+
   constructor(private paletteService: NgxPaletteService, public el: ElementRef ) {
     this.tempCanvas = document.createElement('canvas');
     this.tempCanvas.width = Parameters.BSCanvasSize;
@@ -27,25 +58,12 @@ export class NgxColorShadesComponent implements OnInit, OnDestroy, AfterViewInit
     this.internalColor = new Color('skyblue');
   }
 
-  @ViewChild('hueCanvas') hueCanvas: ElementRef;
-  @ViewChild('chromeCanvas') chromeCanvas: ElementRef;
-  @ViewChild('imageCanvas') imageCanvas: ElementRef;
-  @ViewChild('versionCanvas') versionCanvas: ElementRef;
-
-  private lastRenderedHue: string;
-  private tempCanvas: HTMLCanvasElement;
-  private internalColor: Color;
-  private observer;
-
-  ngOnInit() {
-  }
-
   ngAfterViewInit(): void {
     this.renderHue();
     this.renderImage(this.internalColor.hue);
     this.renderChrome(this.internalColor.hue, this.internalColor.saturation, this.internalColor.brightness);
     this.internalColor.addEventListener(ColorEvent.UPDATED, () => {
-      console.log(this.internalColor)
+      this.propagateChange(GenerateColorString(this.internalColor, this.colorFormat));
       this.renderImage(this.internalColor.hue);
       this.renderChrome(this.internalColor.hue, this.internalColor.saturation, this.internalColor.brightness);
     });
@@ -69,11 +87,10 @@ export class NgxColorShadesComponent implements OnInit, OnDestroy, AfterViewInit
 
   private renderChrome(hue, sat, bri) {
     hue = Math.round(hue);
-    sat = sat;
-    bri = bri;
     const canvas = this.chromeCanvas.nativeElement;
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
+    const imageCanvas = this.imageCanvas.nativeElement;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'white';
@@ -90,8 +107,8 @@ export class NgxColorShadesComponent implements OnInit, OnDestroy, AfterViewInit
     ctx.fill();
 
     // Mark brightness and saturation
-    const lightnessPosition = ((bri) / 100) * canvas.width;
-    const saturationPosition = (((sat) / 100) * (canvas.height - 30)) + 10;
+    const lightnessPosition = ((bri) / 100) * imageCanvas.width;
+    const saturationPosition = (((sat) / 100) * imageCanvas.height) + 10;
 
     ctx.beginPath();
     ctx.strokeOpacity = 1;
@@ -179,7 +196,10 @@ export class NgxColorShadesComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   chromeClicked($event: MouseEvent) {
-    console.log($event);
+    if (this.isDisabled) {
+      return;
+    }
+    this.onTouched();
     $event = this.fixEvent($event);
     const canvas = this.chromeCanvas.nativeElement;
     let p;
@@ -194,14 +214,29 @@ export class NgxColorShadesComponent implements OnInit, OnDestroy, AfterViewInit
     } else {
       // BS clicked
       const coord = {
-        x: Math.round($event.offsetX / this.chromeCanvas.nativeElement.canvasWidth * 100),
-        y: Math.round(($event.offsetY - 10) / this.chromeCanvas.nativeElement.canvasHeight * 100)
+        x: $event.offsetX / this.imageCanvas.nativeElement.width * 100,
+        y: ($event.offsetY - 10) / this.imageCanvas.nativeElement.height * 100
       };
-      this.internalColor.saturation = coord.x;
-      this.internalColor.brightness = coord.y;
+      this.internalColor.saturation = coord.y;
+      this.internalColor.brightness = coord.x;
     }
   }
 
-  ngOnDestroy(): void {
+  writeValue(obj: any): void {
+    if (obj) {
+      this.internalColor.parse(obj);
+    }
+  }
+
+  registerOnChange(fn: any): void {
+    this.propagateChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
   }
 }

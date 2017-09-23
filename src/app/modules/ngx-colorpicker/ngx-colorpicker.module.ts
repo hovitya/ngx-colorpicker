@@ -4,10 +4,12 @@ import { NgxColorpickerComponent } from './ngx-colorpicker/ngx-colorpicker.compo
 import { NgxColorDisplayDirective } from './directives/ngx-color-display.directive';
 import { NgxColorShadesComponent } from './/ngx-color-shades/ngx-color-shades.component';
 import { NgxPaletteService } from './services/ngx-palette.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
   ],
   declarations: [NgxColorpickerComponent, NgxColorDisplayDirective, NgxColorShadesComponent],
   exports: [NgxColorpickerComponent, NgxColorShadesComponent],

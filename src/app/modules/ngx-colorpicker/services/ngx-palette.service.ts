@@ -14,7 +14,7 @@ export class NgxPaletteService {
     return color.hex;
   }
 
-  createSolidColors(base, lightness, renderGrey) {
+  createSolidColors(base?, lightness?, renderGrey?) {
     const newColors = [];
     let baseColors = ['#333ECF', '#6A3FC4', '#C53E3E', '#E89C30', '#E3E31F', '#40C353'];
     let lightnessValues = [73, 65, 51, 43, 34, 24];

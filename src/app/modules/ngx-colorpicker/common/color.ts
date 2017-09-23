@@ -160,7 +160,7 @@ export class ColorEvent extends RokkEvent {
 }
 /* tslint:disable:no-bitwise */
 export class Color extends EventDispatcher {
-  private isHex: RegExp = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
+  public isHex: RegExp = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
   private isHSL: RegExp = /^hsla?\((\d{1,3}?),\s*(\d{1,3}%),\s*(\d{1,3}%)(,\s*[01]?\.?\d*)?\)$/;
   private isRGB: RegExp = /^rgba?\((\d{1,3}%?),\s*(\d{1,3}%?),\s*(\d{1,3}%?)(,\s*[01]?\.?\d*)?\)$/;
   private isPercent: RegExp = /^\d+(\.\d+)*%$/;

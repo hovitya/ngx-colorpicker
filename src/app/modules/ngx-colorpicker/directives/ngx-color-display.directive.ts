@@ -10,8 +10,10 @@ export class NgxColorDisplayDirective {
 
   @Input()
   set ngxColorDisplay(value: string) {
-    this.innerColor.parse(value);
-    this.el.nativeElement.style.backgroundColor = this.innerColor.hex;
+    if (value) {
+      this.innerColor.parse(value);
+      this.el.nativeElement.style.backgroundColor = this.innerColor.hex;
+    }
   }
 
   get ngxColorDisplay(): string {

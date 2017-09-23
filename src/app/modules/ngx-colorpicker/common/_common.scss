@@ -16,7 +16,7 @@
   position: relative;
   width: calc((100%*(1/#{$itemNumber})) - #{$padding});
   height: 0;
-  padding-bottom: calc(floor(100%*(1/#{$itemNumber})) - #{$padding});
+  padding-bottom: calc(100%*(1/#{$itemNumber}) - #{$padding});
   display:inline-block;
   margin-top: $padding;
   margin-left: $padding;
