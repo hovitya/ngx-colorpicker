@@ -1,19 +1,51 @@
-import { Component, Input, NgZone, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, NgZone, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Color, ColorEvent } from '../common/color';
 import { NgxPaletteService } from '../services/ngx-palette.service';
 import { Page } from '../common/pages';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ColorFormat, GenerateColorString } from '../common/color-format';
 
 @Component({
   selector: 'ngx-colorpicker',
   templateUrl: './ngx-colorpicker.component.html',
-  styleUrls: ['./ngx-colorpicker.component.scss']
+  styleUrls: ['./ngx-colorpicker.component.scss'],
+  animations: [
+    trigger('pageState', [
+      state(Page.SOLID, style({
+        marginLeft: '0px'
+      })),
+      state(Page.ADVANCED, style({
+        marginLeft: '-250px'
+      })),
+      state(Page.FAVORITE, style({
+        marginLeft: '-500px'
+      })),
+      transition('* => *', animate('500ms cubic-bezier(0.645, 0.045, 0.355, 1.000)')),
+    ])
+  ]
 })
 export class NgxColorpickerComponent implements OnInit {
   private internalColor = new Color();
+  private _colorFormat: ColorFormat = ColorFormat.HEX;
+
+  @Input()
+  set colorFormat(value: ColorFormat) {
+    this._colorFormat = value;
+  }
+
+  get colorFormat(): ColorFormat {
+    return this._colorFormat;
+  }
 
   @Input()
   public showClose = false;
+
+  @Input()
+  public showFavorites = true;
+
+  @Input()
+  public showLastUsed = true;
 
   @Input()
   public lastUsedLabel = 'Last used';
@@ -22,9 +54,15 @@ export class NgxColorpickerComponent implements OnInit {
   public solidColorsLabel = 'Solid colors';
 
   @Input()
+  public favoritesLabel = 'Favorites';
+
+  @Input()
   public set baseColors(value: string[]) {
     this.solidColors = this.paletteService.createSolidColors(value).filter((item, index) => index < 56 );
   }
+
+  @Output()
+  public close: EventEmitter<string> = new EventEmitter();
 
   public currentPage: Page = Page.SOLID;
 
@@ -71,7 +109,7 @@ export class NgxColorpickerComponent implements OnInit {
     });
 
     this.hexColor.valueChanges.subscribe(() => {
-      if (this.internalColor.isHex.test(`#${this.hexColor.value}`) && this.internalColor.hex !== this.hexColor.value) {
+      if (this.hexColor.value.length === 6 && this.internalColor.hex !== this.hexColor.value) {
         this.internalColor.parse(`#${this.hexColor.value}`);
       }
     });
@@ -89,8 +127,7 @@ export class NgxColorpickerComponent implements OnInit {
     this.internalColor.parse(color);
   }
 
-  public close() {
-    // TODO
+  public closeClicked() {
+    this.close.emit(GenerateColorString(this.internalColor, this.colorFormat));
   }
-
 }

@@ -1,74 +1,81 @@
 <div class="ngx-colorpicker-wrapper">
   <!-- Fix header -->
   <div class="ngx-colorpicker-block ngx-colorpicker-header">
-    <div class="ngx-selected-color" [ngxColorDisplay]="color.value" ></div>
-    <button class="ngx-fav-button" [ngClass]="{active: favouriteSelected}" ng-click="toggleFavourite(state.color)">&hearts;</button>
-    <button class="ngx-colorpicker-close" *ngIf="showClose" (click)="close()">&#10005; close</button>
+    <div class="ngx-selected-color" [ngxColorDisplay]="color.value"></div>
+    <button class="ngx-fav-button" [ngClass]="{active: favouriteSelected}" ng-click="toggleFavourite(state.color)" *ngIf="showFavorites">
+      &hearts;
+    </button>
+    <button class="ngx-colorpicker-close" *ngIf="showClose" (click)="closeClicked()">&#10005; close</button>
   </div>
 
   <!-- Carousel for color picker pages -->
-  <ul class="pages">
-    <!-- Solid colors tab -->
-    <li *ngIf="currentPage === Page.SOLID">
-      <div class="ngx-colorpicker-block">
-        <div class="ngx-colorPicker-label">{{lastUsedLabel}}</div>
-        <div class="color-list ngx-last-used">
-          <div class="color-item" data-ng-repeat="color in history| limitTo : 8" [ngxColorDisplay]="color" ng-click="setActive(color)"></div>
+  <div class="pages-wrapper">
+    <ul class="pages" [@pageState]="currentPage">
+      <!-- Solid colors tab -->
+      <li>
+        <div class="ngx-colorpicker-block" *ngIf="showLastUsed">
+          <div class="ngx-colorPicker-label">{{lastUsedLabel}}</div>
+          <div class="color-list ngx-last-used">
+            <div class="color-item" data-ng-repeat="color in history| limitTo : 8" [ngxColorDisplay]="color"
+                 ng-click="setActive(color)"></div>
+          </div>
         </div>
-      </div>
-      <div class="ngx-colorpicker-block">
-        <div class="ngx-colorPicker-label">{{solidColorsLabel}}</div>
-        <div class="color-list">
-          <div class="color-item" *ngFor="let clr of solidColors" [ngxColorDisplay]="clr" (click)="setActive(clr)"></div>
+        <div class="ngx-colorpicker-block">
+          <div class="ngx-colorPicker-label">{{solidColorsLabel}}</div>
+          <div class="color-list">
+            <div class="color-item" *ngFor="let clr of solidColors" [ngxColorDisplay]="clr"
+                 (click)="setActive(clr)"></div>
+          </div>
         </div>
-      </div>
-    </li>
-    <!-- Advanced tab -->
-    <li *ngIf="currentPage === Page.ADVANCED">
-      <div class="ngx-colorpicker-block">
-        <ngx-color-shades [formControl]="color"></ngx-color-shades>
-      </div>
-      <div class="ngx-colorpicker-block fix-overflow">
-        <input type="text"
-               [formControl]="hexColor"
-               spellcheck="false"
-               class="ngx-hex"
-               maxlength="6">
-        <input type="text"
-               [formControl]="blueColor"
-               spellcheck="false"
-               maxlength="3"
-               class="ngx-rgb ngx-b">
-        <div class="ngx-rgb-label">B</div>
-        <input type="text"
-               [formControl]="greenColor"
-               maxlength="3"
-               spellcheck="false"
-               class="ngx-rgb ngx-g">
-        <div class="ngx-rgb-label">G</div>
-        <input type="text"
-               [formControl]="redColor"
-               maxlength="3"
-               spellcheck="false"
-               class="ngx-rgb ngx-r">
-        <div class="ngx-rgb-label">R</div>
+      </li>
+      <!-- Advanced tab -->
+      <li>
+        <div class="ngx-colorpicker-block">
+          <ngx-color-shades [formControl]="color"></ngx-color-shades>
+        </div>
+        <div class="ngx-colorpicker-block fix-overflow">
+          <input type="text"
+                 [formControl]="hexColor"
+                 spellcheck="false"
+                 class="ngx-hex"
+                 maxlength="6">
+          <input type="text"
+                 [formControl]="blueColor"
+                 spellcheck="false"
+                 maxlength="3"
+                 class="ngx-rgb ngx-b">
+          <div class="ngx-rgb-label">B</div>
+          <input type="text"
+                 [formControl]="greenColor"
+                 maxlength="3"
+                 spellcheck="false"
+                 class="ngx-rgb ngx-g">
+          <div class="ngx-rgb-label">G</div>
+          <input type="text"
+                 [formControl]="redColor"
+                 maxlength="3"
+                 spellcheck="false"
+                 class="ngx-rgb ngx-r">
+          <div class="ngx-rgb-label">R</div>
 
-      </div>
-
-    </li>
-    <!-- Favourites tab -->
-    <li *ngIf="currentPage === Page.FAVORITE">
-      <div class="ngx-colorpicker-block">
-        <div class="ngx-colorPicker-label">Favourites</div>
-        <div class="color-list">
-          <div class="color-item" data-ng-repeat="color in favourites" [ngxColorDisplay]="color" (click)="setActive(color)"></div>
         </div>
-      </div>
-    </li>
-  </ul>
+
+      </li>
+      <!-- Favourites tab -->
+      <li>
+        <div class="ngx-colorpicker-block">
+          <div class="ngx-colorPicker-label">{{favoritesLabel}}</div>
+          <div class="color-list">
+            <div class="color-item" data-ng-repeat="color in favourites" [ngxColorDisplay]="color"
+                 (click)="setActive(color)"></div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
   <div class="navigation">
     <span [ngClass]="{'active': currentPage === Page.SOLID}" (click)="currentPage = Page.SOLID">●</span>
     <span [ngClass]="{'active': currentPage === Page.ADVANCED}" (click)="currentPage = Page.ADVANCED">●</span>
-    <span class="heart" [ngClass]="{'active': currentPage === Page.FAVORITE}" (click)="currentPage = Page.FAVORITE">&hearts;</span>
+    <span class="heart" [ngClass]="{'active': currentPage === Page.FAVORITE}" (click)="currentPage = Page.FAVORITE" *ngIf="showFavorites">&hearts;</span>
   </div>
 </div>

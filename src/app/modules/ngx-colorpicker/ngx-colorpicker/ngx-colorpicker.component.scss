@@ -18,16 +18,27 @@
       font-size: 12px;
     }
   }
+  .pages-wrapper {
+    overflow: hidden;
+  }
   ul.pages{
     list-style: none;
     padding-left: 0;
+    display: flex;
+    overflow: hidden;
+    width: 3 * $desktopWidth;
+    li{
+      width: $desktopWidth;
+      display: inline-block;
+      white-space: normal;
+    }
   }
   display: inline-block;
   width: $desktopWidth;
   background-color: $panelBackground;
   color: $textColor;
   font-family: $font;
-  padding: 5px;
+  padding: $panelPadding;
   .ngx-colorpicker-block {
     margin-bottom: 10px;
     &.fix-overflow {

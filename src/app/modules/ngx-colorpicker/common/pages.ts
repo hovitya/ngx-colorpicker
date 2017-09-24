@@ -1,3 +1,3 @@
 export enum Page {
-  SOLID, ADVANCED, FAVORITE
+  SOLID = 'solid', ADVANCED = 'advanced', FAVORITE = 'favorite'
 }

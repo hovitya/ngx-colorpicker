@@ -27,7 +27,7 @@ const Parameters = {
     }
   ]
 })
-export class NgxColorShadesComponent implements AfterViewInit, ControlValueAccessor {
+export class NgxColorShadesComponent implements AfterViewInit, ControlValueAccessor, OnDestroy {
   @ViewChild('hueCanvas') hueCanvas: ElementRef;
   @ViewChild('chromeCanvas') chromeCanvas: ElementRef;
   @ViewChild('imageCanvas') imageCanvas: ElementRef;
@@ -38,6 +38,7 @@ export class NgxColorShadesComponent implements AfterViewInit, ControlValueAcces
   private lastRenderedHue: string;
   private tempCanvas: HTMLCanvasElement;
   private internalColor: Color;
+  private _colorChangeListener: () => void;
 
   private propagateChange = (_: any) => { };
   private onTouched = () => {};
@@ -62,11 +63,12 @@ export class NgxColorShadesComponent implements AfterViewInit, ControlValueAcces
     this.renderHue();
     this.renderImage(this.internalColor.hue);
     this.renderChrome(this.internalColor.hue, this.internalColor.saturation, this.internalColor.brightness);
-    this.internalColor.addEventListener(ColorEvent.UPDATED, () => {
+    this._colorChangeListener = () => {
       this.propagateChange(GenerateColorString(this.internalColor, this.colorFormat));
       this.renderImage(this.internalColor.hue);
       this.renderChrome(this.internalColor.hue, this.internalColor.saturation, this.internalColor.brightness);
-    });
+    };
+    this.internalColor.addEventListener(ColorEvent.UPDATED, this._colorChangeListener);
   }
 
   private renderHue() {
@@ -239,4 +241,9 @@ export class NgxColorShadesComponent implements AfterViewInit, ControlValueAcces
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
   }
+
+  ngOnDestroy(): void {
+    this.internalColor.removeEventListener(ColorEvent.UPDATED, this._colorChangeListener);
+  }
+
 }
