@@ -9,7 +9,7 @@
   <!-- Carousel for color picker pages -->
   <ul class="pages">
     <!-- Solid colors tab -->
-    <li>
+    <li *ngIf="currentPage === Page.SOLID">
       <div class="ngx-colorpicker-block">
         <div class="ngx-colorPicker-label">{{lastUsedLabel}}</div>
         <div class="color-list ngx-last-used">
@@ -24,7 +24,7 @@
       </div>
     </li>
     <!-- Advanced tab -->
-    <li>
+    <li *ngIf="currentPage === Page.ADVANCED">
       <div class="ngx-colorpicker-block">
         <ngx-color-shades [formControl]="color"></ngx-color-shades>
       </div>
@@ -57,7 +57,7 @@
 
     </li>
     <!-- Favourites tab -->
-    <li>
+    <li *ngIf="currentPage === Page.FAVORITE">
       <div class="ngx-colorpicker-block">
         <div class="ngx-colorPicker-label">Favourites</div>
         <div class="color-list">
@@ -66,4 +66,9 @@
       </div>
     </li>
   </ul>
+  <div class="navigation">
+    <span [ngClass]="{'active': currentPage === Page.SOLID}" (click)="currentPage = Page.SOLID">●</span>
+    <span [ngClass]="{'active': currentPage === Page.ADVANCED}" (click)="currentPage = Page.ADVANCED">●</span>
+    <span class="heart" [ngClass]="{'active': currentPage === Page.FAVORITE}" (click)="currentPage = Page.FAVORITE">&hearts;</span>
+  </div>
 </div>

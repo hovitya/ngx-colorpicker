@@ -2,6 +2,7 @@ import { Component, Input, NgZone, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Color, ColorEvent } from '../common/color';
 import { NgxPaletteService } from '../services/ngx-palette.service';
+import { Page } from '../common/pages';
 
 @Component({
   selector: 'ngx-colorpicker',
@@ -24,6 +25,10 @@ export class NgxColorpickerComponent implements OnInit {
   public set baseColors(value: string[]) {
     this.solidColors = this.paletteService.createSolidColors(value).filter((item, index) => index < 56 );
   }
+
+  public currentPage: Page = Page.SOLID;
+
+  public Page = Page;
 
   public solidColors;
 
@@ -72,13 +77,11 @@ export class NgxColorpickerComponent implements OnInit {
     });
 
     this.internalColor.addEventListener(ColorEvent.UPDATED, () => {
-      this.zone.run(() => {
         this.color.setValue(this.internalColor.hex, {onlySelf: true, emitEvent: false});
         this.redColor.setValue(this.internalColor.red, {onlySelf: true, emitEvent: false});
         this.greenColor.setValue(this.internalColor.green, {onlySelf: true, emitEvent: false});
         this.blueColor.setValue(this.internalColor.blue, {onlySelf: true, emitEvent: false});
         this.hexColor.setValue(this.internalColor.hex.substr(1), {onlySelf: true, emitEvent: false});
-      });
     });
   }
 

@@ -203,3 +203,20 @@
 .ngx-color-input {
   cursor: pointer;
 }
+
+.navigation {
+  text-align: center;
+  .heart {
+    font-size: 10px;
+  }
+  span {
+    cursor: pointer;
+    opacity: .4;
+    &.active {
+      opacity: 1;
+    }
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
