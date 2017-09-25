@@ -16,8 +16,8 @@
         <div class="ngx-colorpicker-block" *ngIf="showLastUsed">
           <div class="ngx-colorPicker-label">{{lastUsedLabel}}</div>
           <div class="color-list ngx-last-used">
-            <div class="color-item" data-ng-repeat="color in history| limitTo : 8" [ngxColorDisplay]="color"
-                 ng-click="setActive(color)"></div>
+            <div class="color-item" *ngFor="let clr of lastUsed" [ngxColorDisplay]="clr"
+                 (click)="setActive(clr)"></div>
           </div>
         </div>
         <div class="ngx-colorpicker-block">

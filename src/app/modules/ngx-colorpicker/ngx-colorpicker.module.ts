@@ -6,6 +6,7 @@ import { NgxColorShadesComponent } from './/ngx-color-shades/ngx-color-shades.co
 import { NgxPaletteService } from './services/ngx-palette.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxColorStoreService } from './services/ngx-color-store.service';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   ],
   declarations: [NgxColorpickerComponent, NgxColorDisplayDirective, NgxColorShadesComponent],
   exports: [NgxColorpickerComponent, NgxColorShadesComponent],
-  providers: [NgxPaletteService]
+  providers: [NgxPaletteService, NgxColorStoreService]
 })
 export class NgxColorpickerModule { }
