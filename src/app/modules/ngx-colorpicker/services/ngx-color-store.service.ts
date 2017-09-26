@@ -42,6 +42,14 @@ export class NgxColorStoreService {
 
   remove(key: string, color: string) {
     const original = this.readFromLocalStorage(key);
-    // if ()
+    const pos = original.indexOf(color);
+    if (pos !== -1) {
+      original.splice(pos, 1);
+      const modified = [...original];
+      this.writeToLocalStorage(key, modified);
+      if (this.subjects[key]) {
+        this.subjects[key].next(modified);
+      }
+    }
   }
 }

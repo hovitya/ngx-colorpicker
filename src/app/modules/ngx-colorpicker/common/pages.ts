@@ -1,3 +1,5 @@
-export enum Page {
-  SOLID = 'solid', ADVANCED = 'advanced', FAVORITE = 'favorite'
+export class Page {
+  static SOLID = 'solid';
+  static ADVANCED = 'advanced';
+  static FAVORITE = 'favorite';
 }

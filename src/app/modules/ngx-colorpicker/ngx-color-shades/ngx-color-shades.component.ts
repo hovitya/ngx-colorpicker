@@ -1,7 +1,5 @@
-///<reference path="../../../../../node_modules/@angular/core/src/metadata/lifecycle_hooks.d.ts"/>
 import {
-  AfterViewChecked, AfterViewInit, Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild,
-  ViewContainerRef
+  AfterViewInit, Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild
 } from '@angular/core';
 import { Color, ColorEvent } from '../common/color';
 import { NgxPaletteService } from '../services/ngx-palette.service';

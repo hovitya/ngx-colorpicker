@@ -2,7 +2,7 @@
   <!-- Fix header -->
   <div class="ngx-colorpicker-block ngx-colorpicker-header">
     <div class="ngx-selected-color" [ngxColorDisplay]="color.value"></div>
-    <button class="ngx-fav-button" [ngClass]="{active: favouriteSelected}" ng-click="toggleFavourite(state.color)" *ngIf="showFavorites">
+    <button class="ngx-fav-button" [ngClass]="{active: isCurrentFavorite}" (click)="addToFavorite()" *ngIf="showFavorites">
       &hearts;
     </button>
     <button class="ngx-colorpicker-close" *ngIf="showClose" (click)="closeClicked()">&#10005; close</button>
@@ -66,8 +66,8 @@
         <div class="ngx-colorpicker-block">
           <div class="ngx-colorPicker-label">{{favoritesLabel}}</div>
           <div class="color-list">
-            <div class="color-item" data-ng-repeat="color in favourites" [ngxColorDisplay]="color"
-                 (click)="setActive(color)"></div>
+            <div class="color-item" *ngFor="let clr of favorites" [ngxColorDisplay]="clr"
+                 (click)="setActive(clr)"></div>
           </div>
         </div>
       </li>
